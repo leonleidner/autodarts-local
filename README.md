@@ -49,3 +49,31 @@ Open your web browser and navigate to:
 http://localhost:3000
 ```
 Enter your Autodarts board IP, select your game settings, and click **Connect & Play**!
+
+---
+
+## 🔁 Auto-Start on Boot (Linux / Raspberry Pi)
+
+If you want the application to automatically start whenever you turn on your Linux PC or Raspberry Pi, the easiest and most robust method is using **PM2** (a process manager for Node.js).
+
+### 1. Install PM2 Globally
+Open your terminal and run:
+`sudo npm install pm2@latest -g`
+
+### 2. Start the App via PM2
+Make sure you are in the `autodarts-local` directory, then run:
+`pm2 start server.js --name "autodarts-local"`
+
+*The server is now running in the background and will restart automatically if it crashes.*
+
+### 3. Generate the Startup Script
+Run this command to get the startup command for your specific Linux system:
+`pm2 startup`
+
+**Important:** PM2 will output a command at the very end (starting with `sudo env PATH...`). **Copy that exact command and run it in your terminal.**
+
+### 4. Save the Current State
+Once you have run the command from the step above, tell PM2 to freeze and save your currently running apps so it knows what to load on boot:
+`pm2 save`
+
+That's it! You can now restart your computer, and the Autodarts Local 1vs1 server will automatically boot up in the background.
