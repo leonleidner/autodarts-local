@@ -18,7 +18,14 @@ You can clone this repository and start the game immediately on any system runni
 
 ### 1. Prerequisites
 Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
-Check if Node.js is installed by running:
+If you are on Ubuntu/Debian/Raspberry Pi, you can install node and npm via the official NodeSource repository (recommended):
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+*Note: The above command installs both `node` and `npm`.*
+
+Check if Node.js is installed correctly by running:
 ```bash
 node -v
 npm -v
