@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autodarts Local</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Setup Overlay -->
+    <div id="setup-view" class="overlay active">
+        <div class="glass-panel scale-up">
+            <h1 class="logo-text">AUTODARTS<span class="accent">.LOCAL</span></h1>
+            <p class="subtitle">1vs1 Darts Match</p>
+
+            <form id="setup-form">
+                <div class="input-group">
+                    <label>Player 1</label>
+                    <input type="text" id="p1-name" value="Player 1" required>
+                </div>
+                <div class="input-group">
+                    <label>Player 2</label>
+                    <input type="text" id="p2-name" value="Player 2" required>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Starting Score</label>
+                        <select id="start-score">
+                            <option value="501" selected>501</option>
+                            <option value="301">301</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Out Mode</label>
+                        <select id="out-mode">
+                            <option value="Double" selected>Double Out</option>
+                            <option value="Single">Single/Master Out</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Legs to Win</label>
+                        <input type="number" id="target-legs" value="3" min="1" max="21">
+                    </div>
+                    <div class="input-group">
+                        <label>Board IP (Port 3180)</label>
+                        <input type="text" id="board-ip" value="127.0.0.1">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">START MATCH</button>
+            </form>
+
+            <div id="board-status-setup" class="status-indicator">
+                <div class="dot offline"></div> <span>Board: Offline</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game View -->
+    <div id="game-view" class="main-container hidden">
+        <!-- Status Bar -->
+        <header class="status-bar">
+            <div id="board-status-game" class="status-indicator">
+                <div class="dot"></div> <span id="board-state-text">Waiting...</span>
+            </div>
+            <button id="end-match-btn" class="btn-secondary btn-small">End Match</button>
+        </header>
+
+        <!-- New Scoreboard -->
+        <div class="scoreboard-grid">
+            <!-- Player 1 -->
+            <div id="p1-card" class="player-panel active-turn">
+                <div class="panel-content">
+                    <div id="p1-score" class="huge-score">501</div>
+                    <div class="last-score-container" id="p1-history-container">
+                    </div>
+                    <div class="player-info-row">
+                        <span id="p1-legs" class="leg-badge">0</span>
+                        <span id="p1-display-name" class="player-name">LOTTE</span>
+                    </div>
+                    <div class="stats-row">
+                        #<span id="p1-darts">0</span> | &empty; <span id="p1-avg" title="Overall Average">0.00</span> /
+                        <span id="p1-leg-avg" title="Leg Average"
+                            style="color:var(--text-muted); font-size:0.9em;">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player 2 -->
+            <div id="p2-card" class="player-panel">
+                <div class="panel-content">
+                    <div id="p2-score" class="huge-score">501</div>
+                    <div class="last-score-container" id="p2-history-container">
+                    </div>
+                    <div class="player-info-row">
+                        <span id="p2-legs" class="leg-badge">0</span>
+                        <span id="p2-display-name" class="player-name">LEIDNER</span>
+                    </div>
+                    <div class="stats-row">
+                        #<span id="p2-darts">0</span> | &empty; <span id="p2-avg" title="Overall Average">0.00</span> /
+                        <span id="p2-leg-avg" title="Leg Average"
+                            style="color:var(--text-muted); font-size:0.9em;">0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Turn Row -->
+        <div class="turn-row">
+            <div class="turn-score-box">
+                <span id="turn-score">0</span>
+            </div>
+            <div class="darts-icons">
+                <div class="dart-icon-box" id="dart-1">
+                    <svg class="dart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path
+                            d="M497.9 14.1c-9-9-22.6-11.8-34.5-7.3l-97.1 36.4L183.1 226.5c-3.1 3.1-6 6.5-8.6 10L109 231c-13.8-1.5-27.6 3.5-37.1 13.1L5.5 310.6c-4.4 4.4-6.4 10.8-5.2 16.9s5.3 11.2 11.1 12.8L104 366l25.6 92.6c1.6 5.8 6.7 10 12.8 11.1s12.5-3.2 16.9-7.6l66.5-66.5c9.6-9.6 14.6-23.3 13.1-37.1l-5.5-65.5c3.5-2.6 6.9-5.5 10-8.6L468.8 145.4l36.4-97.1c4.5-11.9 1.7-25.5-7.3-34.5L497.9 14.1zM384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z" />
+                    </svg>
+                    <span class="dart-text">-</span>
+                </div>
+                <div class="dart-icon-box" id="dart-2">
+                    <svg class="dart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path
+                            d="M497.9 14.1c-9-9-22.6-11.8-34.5-7.3l-97.1 36.4L183.1 226.5c-3.1 3.1-6 6.5-8.6 10L109 231c-13.8-1.5-27.6 3.5-37.1 13.1L5.5 310.6c-4.4 4.4-6.4 10.8-5.2 16.9s5.3 11.2 11.1 12.8L104 366l25.6 92.6c1.6 5.8 6.7 10 12.8 11.1s12.5-3.2 16.9-7.6l66.5-66.5c9.6-9.6 14.6-23.3 13.1-37.1l-5.5-65.5c3.5-2.6 6.9-5.5 10-8.6L468.8 145.4l36.4-97.1c4.5-11.9 1.7-25.5-7.3-34.5L497.9 14.1zM384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z" />
+                    </svg>
+                    <span class="dart-text">-</span>
+                </div>
+                <div class="dart-icon-box" id="dart-3">
+                    <svg class="dart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path
+                            d="M497.9 14.1c-9-9-22.6-11.8-34.5-7.3l-97.1 36.4L183.1 226.5c-3.1 3.1-6 6.5-8.6 10L109 231c-13.8-1.5-27.6 3.5-37.1 13.1L5.5 310.6c-4.4 4.4-6.4 10.8-5.2 16.9s5.3 11.2 11.1 12.8L104 366l25.6 92.6c1.6 5.8 6.7 10 12.8 11.1s12.5-3.2 16.9-7.6l66.5-66.5c9.6-9.6 14.6-23.3 13.1-37.1l-5.5-65.5c3.5-2.6 6.9-5.5 10-8.6L468.8 145.4l36.4-97.1c4.5-11.9 1.7-25.5-7.3-34.5L497.9 14.1zM384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z" />
+                    </svg>
+                    <span class="dart-text">-</span>
+                </div>
+            </div>
+        </div>
+        <div id="checkout-guide" class="checkout-guide hidden"></div>
+
+        <!-- Manual Keyboard Grid -->
+        <div class="keyboard-container">
+            <div class="key-grid">
+                <!-- R1: Multipliers -->
+                <button class="key key-mult cell-double" id="btn-double" data-mult="2">Double</button>
+                <button class="key key-mult cell-triple" id="btn-triple" data-mult="3">Triple</button>
+
+                <!-- R2, R3: Miss + Top Numbers -->
+                <button class="key key-spec cell-miss" data-val="0">Miss</button>
+                <button class="key key-num" data-val="20">S20</button>
+                <button class="key key-num" data-val="19">S19</button>
+                <button class="key key-num" data-val="18">S18</button>
+                <button class="key key-num" data-val="17">S17</button>
+                <button class="key key-num" data-val="16">S16</button>
+
+                <button class="key key-num" data-val="15">S15</button>
+                <button class="key key-num" data-val="14">S14</button>
+                <button class="key key-num" data-val="13">S13</button>
+                <button class="key key-num" data-val="12">S12</button>
+                <button class="key key-num" data-val="11">S11</button>
+
+                <!-- R4, R5: 25 + Bottom Numbers -->
+                <button class="key key-spec cell-25" data-val="25">25</button>
+                <button class="key key-num" data-val="10">S10</button>
+                <button class="key key-num" data-val="9">S9</button>
+                <button class="key key-num" data-val="8">S8</button>
+                <button class="key key-num" data-val="7">S7</button>
+                <button class="key key-num" data-val="6">S6</button>
+
+                <button class="key key-num" data-val="5">S5</button>
+                <button class="key key-num" data-val="4">S4</button>
+                <button class="key key-num" data-val="3">S3</button>
+                <button class="key key-num" data-val="2">S2</button>
+                <button class="key key-num" data-val="1">S1</button>
+
+                <!-- R6: Controls -->
+                <button class="key key-ctrl cell-undo" id="btn-undo">&#x21B6; Undo</button>
+                <button class="key key-ctrl cell-next" id="btn-next">&#x21E5; Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Winner Overlay -->
+    <div id="winner-view" class="overlay hidden">
+        <div class="glass-panel bounce-in">
+            <h1 class="logo-text" id="winner-title">GAME SHOT!</h1>
+            <h2 id="winner-name" class="winner-name">Player 1 Wins</h2>
+            <div class="match-stats">
+                <p>Legs: <span id="final-legs-p1">1</span> - <span id="final-legs-p2">0</span></p>
+                <p>Average: <span id="winner-avg">0.00</span></p>
+            </div>
+            <div class="btn-group">
+                <button id="next-leg-btn" class="btn-primary hidden">Next Leg</button>
+                <button id="rematch-btn" class="btn-primary">Rematch</button>
+                <button id="new-players-btn" class="btn-secondary">New Match</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Adjustment Modal removed -->
+
+    <script src="app.js"></script>
+</body>
+
+</html>
